@@ -7,7 +7,7 @@ class PersonajesService {
         console.log('Estoy en: PersonajesService.getAll()');
         try {
             let pool = await sql.connect(config);
-            let result = await pool.request().query("SELECT id, nombre, imagen from Personaje");
+            let result = await pool.request().query("SELECT * from Personaje");
             returnArray = result.recordsets[0];
         }
         catch (error) {
@@ -55,7 +55,7 @@ class PersonajesService {
             let pool = await sql.connect(config);
             let result = await pool.request()
             .input('pId', sql.Int, id)
-            .query('SELECT * FROM Personaje WHERE id = @pId');
+            .query('SELECT * FROM Personaje WHERE IdPersonaje = @pId');
             returnEntity = result.recordsets[0][0];
         } catch (error) {
             console.log(error);
@@ -69,8 +69,8 @@ class PersonajesService {
         try {
             let pool = await sql.connect(config);
             let result = await pool.request()
-            .query(`INSERT INTO Personaje (Id, Nombre, Imagen, Edad, Peso, Historia, peliserie)
-            VALUES ('${personaje.Id}', '${personaje.Nombre}', '${personaje.Imagen}', ${personaje.Edad}, ${personaje.Peso}, '${personaje.Historia}', '${personaje.Asociadas}')`);
+            .query(`INSERT INTO Personaje (IdPersonaje, Nombre, Imagen, Edad, Peso, Historia, IdPeliculasSerie)
+            VALUES ('${personaje.id}', '${personaje.nombre}', '${personaje.imagen}', ${personaje.edad}, ${personaje.peso}, '${personaje.historia}', '${personaje.idPeliculasSerie}')`);
             rowsAffected = result.rowsAffected;
         } catch (error) {
             console.log(error);
@@ -86,13 +86,13 @@ class PersonajesService {
             let pool = await sql.connect(config);
             let result = await pool.request()
                 .query(`UPDATE Personaje SET 
-                Nombre = '${personaje.Nombre}',
-                Imagen = '${personaje.Imagen}',
-                Edad = ${personaje.Edad},
-                Peso = ${personaje.Peso},
-                Historia = '${personaje.Historia}',
-                peliserie = '${personaje.Asociadas}'
-                WHERE IDd = ${personaje.id}`);
+                Nombre = '${personaje.nombre}',
+                Imagen = '${personaje.imagen}',
+                Edad = ${personaje.edad},
+                Peso = ${personaje.peso},
+                Historia = '${personaje.historia}',
+                IdPeliculasSerie = '${personaje.idPeliculasSerie}'
+                WHERE IdPersonaje = ${personaje.id}`);
             rowsAffected = result.rowsAffected;
         } catch (error) {
             console.log(error);
@@ -107,7 +107,7 @@ class PersonajesService {
             let pool = await sql.connect(config);
             let result = await pool.request()
             .input('pId', sql.Int, id)
-            .query('DELETE FROM Personaje WHERE id = @pId');
+            .query('DELETE FROM Personaje WHERE IdPersonaje = @pId');
             rowsAffected = result.rowsAffected;
         } catch (error) {
             console.log(error);

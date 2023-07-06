@@ -23,7 +23,7 @@ class PeliculasService {
             let pool = await sql.connect(config);
             let result = await pool.request()
             .input('pId', sql.Int, id)
-            .query('SELECT * FROM PeliculaSerie WHERE id = @pId');
+            .query('SELECT * FROM PeliculaSerie WHERE IdPeliculaSerie = @pId');
             returnEntity = result.recordsets[0][0];
         } catch (error) {
             console.log(error);
@@ -39,7 +39,7 @@ class PeliculasService {
             let result = await pool.request()
             .input('pFechaCreacion', sql.Date, new Date().now)
             .query(`INSERT INTO PeliculaSerie (Titulo, Imagen, Calificacion, FechaCreacion, PersonajesAsociados)
-            VALUES ('${pelicula.Titulo}', '${pelicula.Imagen}', ${pelicula.Calificacion}, @pFechaCreacion, '${pelicula.PersonajesAsociados}')`);
+            VALUES ('${pelicula.titulo}', '${pelicula.Imagen}', ${pelicula.calificacion}, @pFechaCreacion, '${pelicula.personajesAsociados}')`);
             rowsAffected = result.rowsAffected;
         } catch (error) {
             console.log(error);
@@ -56,12 +56,12 @@ class PeliculasService {
             let result = await pool.request()
                 .input('pFechaCreacion', sql.Date, pelicula.FechaCreacion)
                 .query(`UPDATE PeliculaSerie SET 
-                Titulo = '${pelicula.Titulo}',
-                Imagen = '${pelicula.Imagen}',
-                Calificacion = ${pelicula.Calificacion},
+                Titulo = '${pelicula.titulo}',
+                Imagen = '${pelicula.imagen}',
+                Calificacion = ${pelicula.calificacion},
                 FechaCreacion = @pFechaCreacion,
-                PersonajesAsociados = '${pelicula.PersonajesAsociados}'
-                WHERE IDd = ${pelicula.id}`);
+                PersonajesAsociados = '${pelicula.personajesAsociados}'
+                WHERE IdPeliculaSerie = ${pelicula.id}`);
             rowsAffected = result.rowsAffected;
         } catch (error) {
             console.log(error);
@@ -76,7 +76,7 @@ class PeliculasService {
             let pool = await sql.connect(config);
             let result = await pool.request()
             .input('pId', sql.Int, id)
-            .query('DELETE FROM PeliculaSerie WHERE id = @pId');
+            .query('DELETE FROM PeliculaSerie WHERE IdPeliculaSerie = @pId');
             rowsAffected = result.rowsAffected;
         } catch (error) {
             console.log(error);
