@@ -25,18 +25,6 @@ app.get('/', async(req, res) => res.send(index(await getPeliculas(), await getPe
 app.listen(port, function() {
     console.log(`Example app listening on port ${port}!`)
 })
-
-
-let personaje = {nombre : "Hanz landa", imagen: "https://imagenes.20minutos.es/files/og_thumbnail/uploads/imagenes/2020/06/20/hans-landa.jpeg", edad: "46", peso: "70", historia: "Nazi", idPeliculasSerie: "breaking bad"}
-
-let Kitty = {id: 10, imagen: 'https://static.wikia.nocookie.net/doblaje/images/b/b5/Kitianime.jpg/revision/latest/thumbnail/width/360/height/450?cb=20171001023505&path-prefix=es', nombre:'Kitty', edad:10,peso:15,historia:'es un gato', idPeliculasSerie:'Hello Kitty' }
-
-let KittyDOS = {id: 10, imagen: 'https://static.wikia.nocookie.net/doblaje/images/b/b5/Kitianime.jpg/revision/latest/thumbnail/width/360/height/450?cb=20171001023505&path-prefix=es', nombre:'Kitty EL GATO', edad:10,peso:15,historia:'es un gato FELIZ', idPeliculasSerie:'Hello Kitty :)' }
-
-let HelloKitty = {id: '10', imagen: 'https://static.wikia.nocookie.net/doblaje/images/b/b5/Kitianime.jpg/revision/latest/thumbnail/width/360/height/450?cb=20171001023505&path-prefix=es', titulo: 'Hello Kitty', calificacion:'10', personajesAsociados: '10'}
-
-let HelloKittyDOS = {id: '10', imagen: 'https://static.wikia.nocookie.net/doblaje/images/b/b5/Kitianime.jpg/revision/latest/thumbnail/width/360/height/450?cb=20171001023505&path-prefix=es', titulo: 'Hello Kitty DOS', calificacion:'9', personajesAsociados: '10'}
-
 ////////////////Personajes//////////////////
 app.get('/characters', async(req, res) => res.send(await getPersonajes()))
 
@@ -44,56 +32,81 @@ app.get('/charactersname/:nombre', async(req, res) => res.send(await getPersonaj
 app.get('/charactersage/:edad', async(req, res) => res.send(await getPersonajeByAge(req.params.edad)))
 app.get('/charactersid/:id', async(req, res) => res.send(await getPersonajeById(req.params.id)))
 
+const putPersonaje = async(personaje) => JSON.stringify(await new PersonajeService().insert(personaje))
+//AddPersonaje()
+/*{"id": 2000,"nombre": "Hola","imagen": "url","edad":  12,"peso": 35,"historia": "url","idPeliculaSerie": "aaa"} */
+app.put('/character', async(req, res) => {
+    let rowsAffected = 0;
+    try {
+        await putPersonaje(req.body);
+        res.status(200).send("Correct Insert");
+    } catch (error) {
+        res.status(400).send(error)
+    }
+});
 
-async function AddPersonaje(PersonajeNuevo){
-    let svc = new PersonajeService()
-    let data
-    data = await svc.insert(PersonajeNuevo)
-    console.log(data)
-}
-//AddPersonaje(Kitty)
+const updatePersonaje = async(personaje) => JSON.stringify(await new PersonajeService().update(personaje))
+//UpdatePersonaje()
+app.put('/characteru', async(req, res) => {
+    let rowsAffected = 0;
+    try {
+        await updatePersonaje(req.body);
+        res.status(200).send("Correct Update");
+    } catch (error) {
+        res.status(400).send(error)
+    }
+});
 
-async function UpdatePersonaje(personajeModificado){
-    let svc = new PersonajeService()
-    let data
-    data = await svc.update(personaje)
-    console.log(data)
-}
-//UpdatePersonaje(KittyDOS)
+const deletePersonaje = async(id) => JSON.stringify(await new PersonajeService().deleteById(id))
+//deleteByIdPersonaje()
+app.delete('/character/:id', async(req, res) => {
+    let rowsAffected = 0;
+    try {
+        await deletePersonaje(req.params.id);
+        res.status(200).send("Correct Delete");
+    } catch (error) {
+        res.status(400).send(error)
+    }
+});
 
-async function deleteByIdPersonaje(id){
-    let svc = new PersonajeService()
-    let data
-    data = await svc.deleteById(id)
-    console.log(data)
-}
-//deleteByIdPersonaje(6)
 
 ////////////////PELICULAS//////////////////
 app.get('/movies', async(req, res) => res.send(await getPeliculas()))
 
 app.get('/movies/:id', async(req, res) => res.send(await getPeliculaById(req.params.id)))
 
-async function AddPelicula(PeliculaNueva){
-    let svc = new PeliculasService()
-    let data
-    data = await svc.insert(PeliculaNueva)
-    console.log(data)
-}
-//AddPelicula(HelloKitty)
+const putPelicula = async(pelicula) => JSON.stringify(await new PeliculasService().insert(pelicula))
+//AddPelicula()
+app.put('/movie', async(req, res) => {
+    let rowsAffected = 0;
+    try {
+        await putPelicula(req.body);
+        res.status(200).send("Correct Insert");
+    } catch (error) {
+        res.status(400).send(error)
+    }
+});
 
-async function UpdatePelicula(peliculaModificada){
-    let svc = new PeliculasService()
-    let data
-    data = await svc.update(personaje)
-    console.log(data)
-}
-//UpdatePelicula(HelloKittyDOS)
+const updatePelicula = async(pelicula) => JSON.stringify(await new PeliculasService().update(pelicula))
+//UpdatePelicula()
+app.put('/movieu', async(req, res) => {
+    let rowsAffected = 0;
+    try {
+        await updatePelicula(req.body);
+        res.status(200).send("Correct Update");
+    } catch (error) {
+        res.status(400).send(error)
+    }
+});
 
-async function deleteByIdPelicula(id){
-    let svc = new PeliculasService()
-    let data
-    data = await svc.deleteById(id)
-    console.log(data)
-}
-//deleteByIdPelicula(6)
+const deletePelicula = async(id) => JSON.stringify(await new PeliculasService().deleteById(id))
+//deleteByIdPelicula()
+app.put('/movie/:id', async(req, res) => {
+    let rowsAffected = 0;
+    try {
+        await deletePelicula(req.params.id);
+        res.status(200).send("Correct Delete");
+    } catch (error) {
+        res.status(400).send(error)
+    }
+});
